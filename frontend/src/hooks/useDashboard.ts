@@ -36,18 +36,33 @@ export function useDashboard() {
   const [data, setData] = useState<DashboardResponse | null>(null)
   const [loading, setLoading] = useState(true)
 
-  useEffect(() => {
+  const fetchDashboard = () => {
     fetch("http://localhost:8000/api/dashboard")
-      .then((res) => res.json())
+      .then((res) => (res.ok ? res.json() : null))
       .then((d) => {
-        setData(d)
+        if (d) setData(d)
         setLoading(false)
       })
       .catch((err) => {
         console.error(err)
         setLoading(false)
       })
+  }
+
+  useEffect(() => {
+    fetchDashboard()
   }, [])
 
-  return { data, loading }
+  const refillHearts = async () => {
+    try {
+      const res = await fetch("http://localhost:8000/api/users/me/refill-hearts", { method: "POST" })
+      if (res.ok) {
+        fetchDashboard()
+      }
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
+  return { data, loading, refetch: fetchDashboard, refillHearts }
 }

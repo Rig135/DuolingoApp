@@ -55,11 +55,19 @@ def seed_db(force: bool = False):
         # Lessons for Skill 'Intro'
         lesson1 = Lesson(skill_id=skill_intro.id, order=1)
         lesson2 = Lesson(skill_id=skill_intro.id, order=2)
-        db.add_all([lesson1, lesson2])
+        
+        # Lessons for Skill 'Phrases'
+        lesson3 = Lesson(skill_id=skill_phrases.id, order=1)
+        
+        # Lessons for Skill 'Travel'
+        lesson4 = Lesson(skill_id=skill_travel.id, order=1)
+        
+        db.add_all([lesson1, lesson2, lesson3, lesson4])
         db.commit()
 
         print("Seeding Exercises (All 5 Types)...")
         exercises = [
+            # --- LESSON 1 (Intro 1) ---
             # 1. MULTIPLE_CHOICE
             Exercise(
                 lesson_id=lesson1.id, type="MULTIPLE_CHOICE", order=1,
@@ -72,7 +80,7 @@ def seed_db(force: bool = False):
                 lesson_id=lesson1.id, type="TRANSLATE", order=2,
                 question="I eat bread",
                 options=["Yo", "como", "pan", "bebo", "agua", "el", "la"],
-                correct_answer=["Yo", "como", "pan"] # Array for correct ordered sequence
+                correct_answer=["Yo", "como", "pan"]
             ),
             # 3. TYPE_ANSWER
             Exercise(
@@ -104,6 +112,137 @@ def seed_db(force: bool = False):
                 question="Yo ___ pan (I eat bread)",
                 options=["como", "bebo", "soy"],
                 correct_answer="como"
+            ),
+
+            # --- LESSON 2 (Intro 2) ---
+            # 1. MULTIPLE_CHOICE
+            Exercise(
+                lesson_id=lesson2.id, type="MULTIPLE_CHOICE", order=1,
+                question="Which of these is 'the woman'?",
+                options=["la mujer", "el hombre", "el agua", "la manzana"],
+                correct_answer="la mujer"
+            ),
+            # 2. TRANSLATE
+            Exercise(
+                lesson_id=lesson2.id, type="TRANSLATE", order=2,
+                question="The woman drinks water",
+                options=["La", "mujer", "bebe", "agua", "el", "pan", "come"],
+                correct_answer=["La", "mujer", "bebe", "agua"]
+            ),
+            # 3. TYPE_ANSWER
+            Exercise(
+                lesson_id=lesson2.id, type="TYPE_ANSWER", order=3,
+                question="Type the Spanish translation for: 'Good morning'",
+                options=None,
+                correct_answer="Buenos días"
+            ),
+            # 4. MATCH_PAIRS
+            Exercise(
+                lesson_id=lesson2.id, type="MATCH_PAIRS", order=4,
+                question="Match the pairs",
+                options=[
+                    {"en": "Woman", "es": "Mujer"},
+                    {"en": "Man", "es": "Hombre"},
+                    {"en": "Water", "es": "Agua"},
+                    {"en": "Bread", "es": "Pan"}
+                ],
+                correct_answer=[
+                    {"en": "Woman", "es": "Mujer"},
+                    {"en": "Man", "es": "Hombre"},
+                    {"en": "Water", "es": "Agua"},
+                    {"en": "Bread", "es": "Pan"}
+                ]
+            ),
+            # 5. FILL_BLANK
+            Exercise(
+                lesson_id=lesson2.id, type="FILL_BLANK", order=5,
+                question="El hombre ___ leche (The man drinks milk)",
+                options=["bebe", "come", "soy"],
+                correct_answer="bebe"
+            ),
+
+            # --- LESSON 3 (Phrases 1) ---
+            Exercise(
+                lesson_id=lesson3.id, type="MULTIPLE_CHOICE", order=1,
+                question="How do you say 'Thank you'?",
+                options=["Gracias", "Por favor", "Hola", "Adiós"],
+                correct_answer="Gracias"
+            ),
+            Exercise(
+                lesson_id=lesson3.id, type="TRANSLATE", order=2,
+                question="Yes, please",
+                options=["Sí", "por", "favor", "gracias", "no", "hola"],
+                correct_answer=["Sí", "por", "favor"]
+            ),
+            Exercise(
+                lesson_id=lesson3.id, type="TYPE_ANSWER", order=3,
+                question="Type the Spanish translation for: 'You are welcome'",
+                options=None,
+                correct_answer="De nada"
+            ),
+            Exercise(
+                lesson_id=lesson3.id, type="MATCH_PAIRS", order=4,
+                question="Match the pairs",
+                options=[
+                    {"en": "Yes", "es": "Sí"},
+                    {"en": "No", "es": "No"},
+                    {"en": "Please", "es": "Por favor"},
+                    {"en": "Thanks", "es": "Gracias"}
+                ],
+                correct_answer=[
+                    {"en": "Yes", "es": "Sí"},
+                    {"en": "No", "es": "No"},
+                    {"en": "Please", "es": "Por favor"},
+                    {"en": "Thanks", "es": "Gracias"}
+                ]
+            ),
+            Exercise(
+                lesson_id=lesson3.id, type="FILL_BLANK", order=5,
+                question="Muchas ___ (Thank you very much)",
+                options=["gracias", "favor", "nada"],
+                correct_answer="gracias"
+            ),
+
+            # --- LESSON 4 (Travel 1) ---
+            Exercise(
+                lesson_id=lesson4.id, type="MULTIPLE_CHOICE", order=1,
+                question="Which of these is 'the airport'?",
+                options=["el aeropuerto", "el hotel", "el taxi", "el tren"],
+                correct_answer="el aeropuerto"
+            ),
+            Exercise(
+                lesson_id=lesson4.id, type="TRANSLATE", order=2,
+                question="Where is the hotel?",
+                options=["Dónde", "está", "el", "hotel", "aeropuerto", "un"],
+                correct_answer=["Dónde", "está", "el", "hotel"]
+            ),
+            Exercise(
+                lesson_id=lesson4.id, type="TYPE_ANSWER", order=3,
+                question="Type the Spanish translation for: 'A taxi, please'",
+                options=None,
+                correct_answer="Un taxi, por favor"
+            ),
+            Exercise(
+                lesson_id=lesson4.id, type="MATCH_PAIRS", order=4,
+                question="Match the pairs",
+                options=[
+                    {"en": "Hotel", "es": "Hotel"},
+                    {"en": "Airport", "es": "Aeropuerto"},
+                    {"en": "Taxi", "es": "Taxi"},
+                    {"en": "Train", "es": "Tren"}
+                ],
+                correct_answer=[
+                    {"en": "Hotel", "es": "Hotel"},
+                    {"en": "Airport", "es": "Aeropuerto"},
+                    {"en": "Taxi", "es": "Taxi"},
+                    {"en": "Train", "es": "Tren"}
+                ]
+            ),
+            Exercise(
+                lesson_id=lesson4.id, type="FILL_BLANK", order=5,
+                question="Necesito un ___ (I need a taxi)",
+                options=["taxi", "hotel", "hola"],
+                correct_answer="taxi"
             )
         ]
         db.add_all(exercises)

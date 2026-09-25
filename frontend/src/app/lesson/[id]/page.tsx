@@ -1,5 +1,11 @@
 import { LessonPlayer } from "@/components/lesson/LessonPlayer"
 
-export default function LessonPage({ params }: { params: { id: string } }) {
-  return <LessonPlayer lessonId={params.id} />
+export default async function LessonPage({
+  params,
+}: {
+  params: Promise<{ id: string }>
+}) {
+  const { id } = await params
+  return <LessonPlayer lessonId={id} />
 }
+

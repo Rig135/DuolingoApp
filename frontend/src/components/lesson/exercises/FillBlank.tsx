@@ -16,15 +16,30 @@ export function FillBlank({ exercise, onSubmit, disabled }: ExerciseProps<string
   const parts = exercise.question.split("___")
 
   return (
-    <div className="flex flex-col items-center w-full">
-      <div className="text-2xl font-bold mb-10 text-gray-800 text-center flex flex-wrap justify-center items-center gap-2">
+    <div className="flex flex-col items-center w-full max-w-xl mx-auto">
+      {/* Consistent Prompt Header */}
+      <div className="w-full text-left mb-6 md:mb-8">
+        <span className="text-xs md:text-sm font-black text-gray-400 dark:text-gray-500 uppercase tracking-wider block mb-1">
+          Complete the sentence
+        </span>
+        <h2 className="text-2xl md:text-3xl font-black text-gray-800 dark:text-white">
+          Fill in the blank
+        </h2>
+      </div>
+
+      {/* Sentence with aligned inline blank */}
+      <div className="w-full text-xl sm:text-2xl md:text-3xl font-black mb-10 text-gray-800 dark:text-white flex flex-wrap items-baseline gap-1.5 leading-loose">
         {parts.map((part, idx) => (
-          <span key={idx} className="flex items-center">
-            {part}
+          <span key={idx} className="inline-flex items-baseline">
+            <span>{part}</span>
             {idx < parts.length - 1 && (
-              <span className={`mx-2 inline-flex items-center justify-center min-w-[80px] h-10 border-b-4 px-4 ${
-                selected ? "border-blue-400 text-blue-500" : "border-gray-300 bg-gray-100"
-              }`}>
+              <span
+                className={`mx-1.5 inline-flex items-center justify-center min-w-[90px] h-10 border-b-4 px-3 rounded-t-lg font-black text-lg sm:text-xl transition-all ${
+                  selected
+                    ? "border-[#1cb0f6] text-[#1cb0f6] bg-[#ddf4ff]/70 dark:bg-[#143242] dark:text-[#49c0f8]"
+                    : "border-gray-300 dark:border-[#2b3d45] bg-gray-100 dark:bg-[#18282f]"
+                }`}
+              >
                 {selected || ""}
               </span>
             )}
@@ -32,17 +47,22 @@ export function FillBlank({ exercise, onSubmit, disabled }: ExerciseProps<string
         ))}
       </div>
       
-      <div className="flex flex-wrap justify-center gap-4 w-full">
+      {/* Options bank */}
+      <div className="flex flex-wrap justify-center gap-3 sm:gap-4 w-full">
         {options.map((option, idx) => (
           <button
             key={idx}
             onClick={() => handleSelect(option)}
             disabled={disabled}
-            className={`px-8 py-4 border-2 rounded-xl text-lg font-bold transition-all ${
+            className={`px-7 py-3.5 border-2 border-b-4 rounded-2xl text-lg font-bold transition-all duration-100 select-none ${
               selected === option
-                ? "border-blue-400 bg-blue-50 text-blue-500"
-                : "border-gray-200 hover:bg-gray-50 hover:border-gray-300 text-gray-700 active:scale-95"
-            } ${disabled && selected !== option ? "opacity-50" : ""}`}
+                ? "border-[#84d8ff] bg-[#ddf4ff] text-[#1cb0f6] dark:border-[#1cb0f6] dark:bg-[#143242] dark:text-[#49c0f8]"
+                : "border-[#e5e5e5] bg-white hover:bg-[#f7f7f7] hover:border-[#d4d4d4] text-[#4b4b4b] dark:bg-[#18282f] dark:border-[#2b3d45] dark:hover:bg-[#1f333c] dark:hover:border-[#384f5a] dark:text-gray-200"
+            } ${
+              disabled && selected !== option
+                ? "opacity-50 cursor-not-allowed"
+                : "active:border-b-2 active:translate-y-0.5 cursor-pointer"
+            }`}
           >
             {option}
           </button>

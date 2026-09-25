@@ -5,11 +5,19 @@ from app.models import User, Exercise, Lesson, Skill, UserProgress, LessonComple
 from app.schemas import CheckAnswerResponse, CompleteLessonResponse
 from app.services.user_service import update_streak_and_xp
 
+import unicodedata
+import re
+
 def normalize_text(text: Any) -> str:
     """Helper to clean string input for robust answer checking."""
     if text is None:
         return ""
-    return str(text).strip().lower()
+    s = str(text).strip().lower()
+    # Normalize accents (e.g. á -> a)
+    s = "".join(c for c in unicodedata.normalize('NFD', s) if unicodedata.category(c) != 'Mn')
+    # Strip edge punctuation like question marks, exclamation marks, periods
+    s = re.sub(r'^[^\w]+|[^\w]+$', '', s)
+    return s.strip()
 
 def evaluate_answer(exercise: Exercise, user_answer: Any) -> bool:
     """
@@ -65,7 +73,11 @@ def check_exercise_answer(db: Session, exercise_id: int, user: User, user_answer
         message = "Nicely done! Correct answer."
     else:
         # Deduct 1 heart on wrong answer (Rule 4 & 5)
-        user.hearts = max(0, (user.hearts or 5) - 1)
+        old_hearts = user.hearts or 5
+        user.hearts = max(0, old_hearts - 1)
+        if old_hearts == 5:
+            from datetime import datetime, timezone
+            user.last_heart_refill = datetime.now(timezone.utc)
         db.commit()
         db.refresh(user)
         message = "Incorrect answer."

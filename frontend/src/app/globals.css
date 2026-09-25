@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:is(.dark *));
+
 @theme {
   --color-primary: #58cc02;
   --color-primary-hover: #46a302;
@@ -14,14 +16,14 @@
   --color-danger-border: #ea2b2b;
 
   --color-locked: #e5e5e5;
-  --color-locked-border: #cecece;
   --color-locked-text: #afafaf;
   
-  --color-text-main: #4b4b4b;
-  --color-text-muted: #777777;
+  --color-text-main: var(--color-text-main);
+  --color-text-muted: var(--color-text-muted);
   
-  --color-bg-main: #ffffff;
-  --color-bg-muted: #f7f7f7;
+  --color-bg-main: var(--color-bg-main);
+  --color-bg-muted: var(--color-bg-muted);
+  --color-locked-border: var(--color-locked-border);
 
   --color-heart: #ff4b4b;
   --color-xp: #ffc800;
@@ -32,6 +34,21 @@
 }
 
 @layer base {
+  :root {
+    --color-bg-main: #ffffff;
+    --color-bg-muted: #f7f7f7;
+    --color-text-main: #4b4b4b;
+    --color-text-muted: #777777;
+    --color-locked-border: #cecece;
+  }
+  .dark {
+    --color-bg-main: #131f24;
+    --color-bg-muted: #202f36;
+    --color-text-main: #ffffff;
+    --color-text-muted: #afafaf;
+    --color-locked-border: #37464f;
+  }
+
   body {
     background-color: var(--color-bg-main);
     color: var(--color-text-main);

@@ -32,19 +32,15 @@ const getSkillIcon = (title: string, isCompleted: boolean, isLocked: boolean) =>
   }
   
   if (isLocked) {
-    // Duolingo locked state: Solid two-tone muted lock icon with high contrast
-    return <Lock className="text-[#8e8e93] fill-[#9ca3af] h-8 w-8 stroke-[2.2] drop-shadow-xs" />
+    return <Lock className="h-8 w-8 text-[#9b9b9b] fill-[#b5b5b5] dark:text-[#52656d] dark:fill-[#52656d]" />
   }
 
-  // Active / unlocked skill icons based on topic
   const lowerTitle = title.toLowerCase()
-  if (lowerTitle.includes("phrase")) {
-    return <MessageSquare className="text-white fill-white h-9 w-9 drop-shadow-sm" />
-  }
-  if (lowerTitle.includes("travel")) {
-    return <Compass className="text-white fill-white h-9 w-9 drop-shadow-sm" />
-  }
-  return <Star className="text-white fill-white h-10 w-10 drop-shadow-sm" />
+  let Icon = Star
+  if (lowerTitle.includes("phrase")) Icon = MessageSquare
+  if (lowerTitle.includes("travel")) Icon = Compass
+
+  return <Icon className="text-white fill-white h-10 w-10 drop-shadow-sm" />
 }
 
 export function SkillNode({ skill, isCurrent, index }: SkillNodeProps) {
@@ -54,7 +50,7 @@ export function SkillNode({ skill, isCurrent, index }: SkillNodeProps) {
   const isLocked = !skill.is_unlocked
 
   const handleStart = () => {
-    if (!skill.next_lesson_id) return
+    if (isLocked || !skill.next_lesson_id) return
     router.push(`/lesson/${skill.next_lesson_id}`)
   }
 
@@ -117,11 +113,13 @@ export function SkillNode({ skill, isCurrent, index }: SkillNodeProps) {
         {/* Ground Drop-Shadow: Gives the 3D 'sitting on the path' effect */}
         <div 
           className={`rounded-full absolute -bottom-2 z-0 blur-[1px] transition-all
-            ${isCurrent 
-              ? 'w-20 h-4 bg-black/20' 
-              : isCompleted 
-                ? 'w-18 h-3.5 bg-black/15' 
-                : 'w-16 h-3 bg-black/10'
+            ${isLocked
+              ? 'w-14 h-2.5 bg-black/5 dark:bg-black/20'
+              : isCurrent 
+                ? 'w-20 h-4 bg-black/20' 
+                : isCompleted 
+                  ? 'w-18 h-3.5 bg-black/15' 
+                  : 'w-16 h-3 bg-black/10'
             }`} 
         />
 
@@ -162,11 +160,10 @@ export function SkillNode({ skill, isCurrent, index }: SkillNodeProps) {
           </svg>
         </div>
 
-        {/* Tactile 3D Button */}
         <div 
           className={`rounded-full flex justify-center items-center relative z-20 transition-all select-none
             ${isLocked 
-              ? 'w-[74px] h-[74px] bg-[#e5e5e5] border-b-[8px] border-[#cecece] cursor-not-allowed' 
+              ? 'w-[72px] h-[72px] bg-[#e5e5e5] border-b-[8px] border-[#cfcfcf] cursor-not-allowed dark:bg-[#37464f] dark:border-[#202b33]' 
               : isCompleted 
                 ? 'w-[76px] h-[76px] bg-[#ffc800] border-b-[9px] border-[#e5a500] hover:-translate-y-1 active:translate-y-[5px] active:border-b-[4px]' 
                 : isCurrent

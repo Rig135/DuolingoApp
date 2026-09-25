@@ -11,7 +11,9 @@ class User(Base):
     xp = Column(Integer, default=0)
     streak = Column(Integer, default=0)
     hearts = Column(Integer, default=5)
+    gems = Column(Integer, default=500)
     last_active_date = Column(DateTime, default=lambda: datetime.now(timezone.utc))
+    last_heart_refill = Column(DateTime, default=lambda: datetime.now(timezone.utc))
     
     progress = relationship("UserProgress", back_populates="user")
     completions = relationship("LessonCompletion", back_populates="user")

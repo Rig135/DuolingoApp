@@ -9,6 +9,7 @@ class UserSummary(BaseModel):
     xp: int
     streak: int
     hearts: int
+    gems: int
 
     class Config:
         from_attributes = True

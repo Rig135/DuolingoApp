@@ -3,11 +3,11 @@ import { Heart, Flame, Star, Gem, Trophy, Target } from "lucide-react"
 import { useDashboard } from "@/hooks/useDashboard"
 
 export function TopBar() {
-  const { data } = useDashboard()
+  const { data, refillHearts } = useDashboard()
   const user = data?.user
 
   return (
-    <div className="sticky top-0 z-30 flex w-full items-center justify-between bg-white px-4 py-3 border-b-2 border-locked-border md:hidden">
+    <div className="sticky top-0 z-30 flex w-full items-center justify-between bg-white dark:bg-[#131f24] px-4 py-3 border-b-2 border-locked-border md:hidden">
       <div className="flex items-center gap-1.5 text-streak font-black text-sm">
         <Flame className="h-6 w-6 fill-streak text-streak" />
         <span>{user?.streak ?? 0}</span>
@@ -16,10 +16,14 @@ export function TopBar() {
         <Gem className="h-6 w-6 fill-gem text-gem" />
         <span>480</span>
       </div>
-      <div className="flex items-center gap-1.5 text-heart font-black text-sm">
+      <button 
+        onClick={refillHearts}
+        title="Refill Hearts"
+        className="flex items-center gap-1.5 text-heart font-black text-sm hover:scale-105 active:scale-95 transition-transform cursor-pointer"
+      >
         <Heart className="h-6 w-6 fill-heart text-heart" />
         <span>{user?.hearts ?? 5}</span>
-      </div>
+      </button>
       <div className="flex items-center gap-1.5 text-xp font-black text-sm">
         <Star className="h-6 w-6 fill-xp text-xp" />
         <span>{user?.xp ?? 0}</span>
@@ -29,7 +33,7 @@ export function TopBar() {
 }
 
 export function RightRail() {
-  const { data } = useDashboard()
+  const { data, refillHearts } = useDashboard()
   const user = data?.user
 
   // Example daily goal math based on user xp
@@ -41,26 +45,30 @@ export function RightRail() {
     <aside className="hidden lg:flex w-88 flex-col gap-6 p-6 border-l-2 border-locked-border min-h-screen">
       {/* Top Gamification Status Bar */}
       <div className="flex w-full items-center justify-between font-black text-sm">
-        <div className="flex items-center gap-2 text-streak cursor-pointer hover:bg-orange-50 p-2 rounded-xl transition-colors">
+        <div className="flex items-center gap-2 text-streak cursor-pointer hover:bg-orange-50 dark:hover:bg-orange-900/30 p-2 rounded-xl transition-colors">
           <Flame className="h-6 w-6 fill-streak text-streak" />
           <span>{user?.streak ?? 0}</span>
         </div>
-        <div className="flex items-center gap-2 text-gem cursor-pointer hover:bg-cyan-50 p-2 rounded-xl transition-colors">
+        <div className="flex items-center gap-2 text-gem cursor-pointer hover:bg-cyan-50 dark:hover:bg-cyan-900/30 p-2 rounded-xl transition-colors">
           <Gem className="h-6 w-6 fill-gem text-gem" />
           <span>480</span>
         </div>
-        <div className="flex items-center gap-2 text-heart cursor-pointer hover:bg-red-50 p-2 rounded-xl transition-colors">
+        <button 
+          onClick={refillHearts}
+          title="Click to refill hearts"
+          className="flex items-center gap-2 text-heart cursor-pointer hover:bg-red-50 dark:hover:bg-red-900/30 p-2 rounded-xl transition-all hover:scale-105 active:scale-95"
+        >
           <Heart className="h-6 w-6 fill-heart text-heart" />
           <span>{user?.hearts ?? 5}</span>
-        </div>
-        <div className="flex items-center gap-2 text-xp cursor-pointer hover:bg-yellow-50 p-2 rounded-xl transition-colors">
+        </button>
+        <div className="flex items-center gap-2 text-xp cursor-pointer hover:bg-yellow-50 dark:hover:bg-yellow-900/30 p-2 rounded-xl transition-colors">
           <Star className="h-6 w-6 fill-xp text-xp" />
           <span>{user?.xp ?? 0}</span>
         </div>
       </div>
 
       {/* Daily Quest / Daily Goal Card */}
-      <div className="rounded-2xl border-2 border-locked-border p-5 bg-white shadow-sm flex flex-col gap-3">
+      <div className="rounded-2xl border-2 border-locked-border p-5 bg-white dark:bg-[#131f24] shadow-sm flex flex-col gap-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Target className="h-5 w-5 text-primary stroke-[2.5]" />
@@ -80,7 +88,7 @@ export function RightRail() {
       </div>
 
       {/* Unlock Leaderboards Card */}
-      <div className="rounded-2xl border-2 border-locked-border p-5 bg-white shadow-sm flex flex-col gap-3">
+      <div className="rounded-2xl border-2 border-locked-border p-5 bg-white dark:bg-[#131f24] shadow-sm flex flex-col gap-3">
         <div className="flex items-center gap-2">
           <Trophy className="h-5 w-5 text-xp stroke-[2.5]" />
           <h3 className="font-extrabold text-base text-text-main">Bronze League</h3>

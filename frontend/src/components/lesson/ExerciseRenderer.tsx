@@ -13,8 +13,9 @@ export interface ExerciseProps<T = any> {
 
 export function ExerciseRenderer(props: ExerciseProps) {
   const { exercise } = props
+  const type = exercise.type.toLowerCase()
 
-  switch (exercise.type) {
+  switch (type) {
     case "multiple_choice":
       return <MultipleChoice key={exercise.id} {...props} />
     case "translate":
