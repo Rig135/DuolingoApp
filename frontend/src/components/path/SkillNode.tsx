@@ -1,5 +1,5 @@
 import * as React from "react"
-import { Star, Lock, Crown, Sparkles } from "lucide-react"
+import { Star, Lock, Crown, Sparkles, MessageSquare, Compass } from "lucide-react"
 import { SkillSummary } from "@/hooks/useDashboard"
 import { useRouter } from "next/navigation"
 
@@ -25,6 +25,28 @@ const getOffset = (index: number) => {
   }
 }
 
+// Get lesson icon based on skill content
+const getSkillIcon = (title: string, isCompleted: boolean, isLocked: boolean) => {
+  if (isCompleted) {
+    return <Crown className="text-white fill-white h-9 w-9 drop-shadow-sm" />
+  }
+  
+  if (isLocked) {
+    // Duolingo locked state: Solid two-tone muted lock icon with high contrast
+    return <Lock className="text-[#8e8e93] fill-[#9ca3af] h-8 w-8 stroke-[2.2] drop-shadow-xs" />
+  }
+
+  // Active / unlocked skill icons based on topic
+  const lowerTitle = title.toLowerCase()
+  if (lowerTitle.includes("phrase")) {
+    return <MessageSquare className="text-white fill-white h-9 w-9 drop-shadow-sm" />
+  }
+  if (lowerTitle.includes("travel")) {
+    return <Compass className="text-white fill-white h-9 w-9 drop-shadow-sm" />
+  }
+  return <Star className="text-white fill-white h-10 w-10 drop-shadow-sm" />
+}
+
 export function SkillNode({ skill, isCurrent, index }: SkillNodeProps) {
   const router = useRouter()
   const offset = getOffset(index)
@@ -32,8 +54,8 @@ export function SkillNode({ skill, isCurrent, index }: SkillNodeProps) {
   const isLocked = !skill.is_unlocked
 
   const handleStart = () => {
-    if (isLocked) return
-    router.push(`/lesson/${skill.id}`)
+    if (!skill.next_lesson_id) return
+    router.push(`/lesson/${skill.next_lesson_id}`)
   }
 
   // Calculate SVG progress arc
@@ -76,7 +98,7 @@ export function SkillNode({ skill, isCurrent, index }: SkillNodeProps) {
             </span>
           ) : isLocked ? (
             <span className="text-text-muted flex items-center gap-1">
-              <Lock className="w-3 h-3 text-text-muted" />
+              <Lock className="w-3 h-3 text-[#8e8e93] fill-[#9ca3af]" />
               {skill.title} (Locked)
             </span>
           ) : (
@@ -144,7 +166,7 @@ export function SkillNode({ skill, isCurrent, index }: SkillNodeProps) {
         <div 
           className={`rounded-full flex justify-center items-center relative z-20 transition-all select-none
             ${isLocked 
-              ? 'w-[74px] h-[74px] bg-locked border-b-[8px] border-locked-border opacity-85 cursor-not-allowed' 
+              ? 'w-[74px] h-[74px] bg-[#e5e5e5] border-b-[8px] border-[#cecece] cursor-not-allowed' 
               : isCompleted 
                 ? 'w-[76px] h-[76px] bg-[#ffc800] border-b-[9px] border-[#e5a500] hover:-translate-y-1 active:translate-y-[5px] active:border-b-[4px]' 
                 : isCurrent
@@ -152,13 +174,7 @@ export function SkillNode({ skill, isCurrent, index }: SkillNodeProps) {
                   : 'w-[76px] h-[76px] bg-[#58cc02] border-b-[9px] border-[#46a302] hover:-translate-y-1 active:translate-y-[5px] active:border-b-[4px]'
             }`}
         >
-          {isLocked ? (
-            <Lock className="text-locked-text h-8 w-8 stroke-[2.5]" />
-          ) : isCompleted ? (
-            <Crown className="text-white fill-white h-9 w-9 drop-shadow-sm" />
-          ) : (
-            <Star className="text-white fill-white h-10 w-10 drop-shadow-sm" />
-          )}
+          {getSkillIcon(skill.title, isCompleted, isLocked)}
         </div>
       </div>
     </div>

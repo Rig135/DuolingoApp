@@ -21,6 +21,13 @@ def get_dashboard_data(db: Session, user: User) -> DashboardResponse:
             is_unlocked = prog.is_unlocked if prog else (unit.order == 1 and skill.order == 1)
             completed = prog.completed_lessons if prog else 0
             total_lessons = len(skill.lessons)
+            next_lesson_id = None
+            if skill.lessons:
+                sorted_lessons = sorted(skill.lessons, key=lambda l: l.order)
+                if completed < total_lessons:
+                    next_lesson_id = sorted_lessons[completed].id
+                else:
+                    next_lesson_id = sorted_lessons[0].id
 
             skill_summaries.append(SkillSummary(
                 id=skill.id,
@@ -29,7 +36,8 @@ def get_dashboard_data(db: Session, user: User) -> DashboardResponse:
                 order=skill.order,
                 is_unlocked=is_unlocked,
                 completed_lessons=completed,
-                total_lessons=total_lessons
+                total_lessons=total_lessons,
+                next_lesson_id=next_lesson_id
             ))
 
         unit_summaries.append(UnitSummary(

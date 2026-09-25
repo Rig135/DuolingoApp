@@ -2,36 +2,29 @@ import * as React from "react"
 import { UnitSummary, SkillSummary } from "@/hooks/useDashboard"
 import { SkillNode } from "./SkillNode"
 import { BookOpen } from "lucide-react"
+import { Button } from "@/components/ui/Button"
 
 interface UnitSectionProps {
   unit: UnitSummary
   currentSkillId: number | null
 }
 
-const UNIT_THEMES: Record<number, { gradient: string; border: string; btnBg: string; btnBorder: string }> = {
+const UNIT_THEMES: Record<number, { gradient: string; border: string }> = {
   1: {
     gradient: "from-[#58cc02] to-[#46a302]",
     border: "border-[#3e8e02]",
-    btnBg: "bg-[#46a302] hover:bg-[#3d8c02]",
-    btnBorder: "border-[#337502]",
   },
   2: {
     gradient: "from-[#1cb0f6] to-[#1899d6]",
     border: "border-[#1479ab]",
-    btnBg: "bg-[#1899d6] hover:bg-[#1585ba]",
-    btnBorder: "border-[#106790]",
   },
   3: {
     gradient: "from-[#ce82ff] to-[#a855f7]",
     border: "border-[#9333ea]",
-    btnBg: "bg-[#a855f7] hover:bg-[#9333ea]",
-    btnBorder: "border-[#7e22ce]",
   },
   4: {
     gradient: "from-[#ff9600] to-[#e08500]",
     border: "border-[#c27300]",
-    btnBg: "bg-[#e08500] hover:bg-[#c47400]",
-    btnBorder: "border-[#a36100]",
   },
 }
 
@@ -54,12 +47,14 @@ export function UnitSection({ unit, currentSkillId }: UnitSectionProps) {
           <p className="text-sm font-semibold opacity-95 mt-0.5 max-w-md">{unit.description}</p>
         </div>
 
-        <button 
-          className={`hidden sm:flex items-center gap-2 font-extrabold text-sm uppercase tracking-wider py-2.5 px-4 rounded-xl text-white ${theme.btnBg} border-b-4 ${theme.btnBorder} active:border-b-0 active:translate-y-1 transition-all cursor-pointer shadow-sm`}
+        {/* Duolingo UI/UX Guidebook Button: Iconic Secondary Blue with 3D bottom border */}
+        <Button 
+          variant="secondary"
+          className="hidden sm:flex items-center gap-2 font-black tracking-wider text-sm py-3 px-5 border-b-4 shadow-sm"
         >
-          <BookOpen className="h-5 w-5" />
+          <BookOpen className="h-5 w-5 stroke-[2.5]" />
           <span>Guidebook</span>
-        </button>
+        </Button>
       </div>
 
       {/* Path with Curved Skill Nodes */}

@@ -16,6 +16,7 @@ export type SkillSummary = {
   is_unlocked: boolean
   completed_lessons: number
   total_lessons: number
+  next_lesson_id?: number
 }
 
 export type UnitSummary = {

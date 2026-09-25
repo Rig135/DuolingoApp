@@ -43,6 +43,7 @@ class SkillSummary(BaseModel):
     is_unlocked: bool
     completed_lessons: int
     total_lessons: int
+    next_lesson_id: Optional[int] = None
 
 class UnitSummary(BaseModel):
     id: int
