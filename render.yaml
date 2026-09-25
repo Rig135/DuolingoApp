@@ -1,0 +1,22 @@
+services:
+  - type: web
+    name: duolingo-backend
+    env: python
+    rootDir: backend
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "uvicorn app.main:app --host 0.0.0.0 --port $PORT"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.9.0
+      - key: PROJECT_NAME
+        value: "Duolingo Clone API"
+      - key: API_V1_STR
+        value: "/api"
+      - key: SQLITE_URL
+        value: "sqlite:////data/duolingo.db"
+      - key: FRONTEND_URL
+        sync: false # Set this to the Vercel URL manually
+    disk:
+      name: sqlite-data
+      mountPath: /data
+      sizeGB: 1
