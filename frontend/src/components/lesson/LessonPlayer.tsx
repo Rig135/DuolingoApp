@@ -28,6 +28,7 @@ export function LessonPlayer({ lessonId }: { lessonId: string }) {
   const [currentIndex, setCurrentIndex] = useState(0)
   const [hearts, setHearts] = useState(5)
   const [currentAnswer, setCurrentAnswer] = useState<any>(null)
+  const [isSubmitting, setIsSubmitting] = useState(false)
   const { width, height } = useWindowSize()
   const [feedback, setFeedback] = useState<{ is_correct?: boolean; correct_answer?: any; message?: string } | null>(null)
   
@@ -99,10 +100,16 @@ export function LessonPlayer({ lessonId }: { lessonId: string }) {
   }
 
   const handleContinue = async () => {
+    if (isSubmitting) return
     if (state === "CORRECT") {
       if (currentIndex + 1 >= exerciseQueue.length) {
+        setIsSubmitting(true)
         setState("COMPLETED")
-        await completeLesson()
+        try {
+          await completeLesson()
+        } finally {
+          setIsSubmitting(false)
+        }
       } else {
         setCurrentIndex((prev) => prev + 1)
         setCurrentAnswer(null)
@@ -282,6 +289,7 @@ export function LessonPlayer({ lessonId }: { lessonId: string }) {
       <div className="flex-1 overflow-y-auto px-6 pt-6 md:pt-10 pb-8 flex flex-col items-center max-w-2xl mx-auto w-full">
         {currentExercise && (
           <ExerciseRenderer
+            key={`${currentExercise.id}-${currentIndex}`}
             exercise={currentExercise}
             onSubmit={(answer) => setCurrentAnswer(answer)}
             disabled={state !== "ACTIVE"}

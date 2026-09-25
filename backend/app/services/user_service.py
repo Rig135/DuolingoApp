@@ -52,22 +52,23 @@ def get_current_user(db: Session) -> User:
     return user
 
 def refill_user_hearts(db: Session, user: User) -> int:
-    """Refill user hearts back to maximum 5."""
-    if user.gems >= 100:
+    """Refill user hearts back to maximum 5 safely without bricking the user."""
+    user.hearts = 5
+    user.last_heart_refill = datetime.now(timezone.utc)
+    if user.gems and user.gems >= 100:
         user.gems -= 100
-        user.hearts = 5
-        user.last_heart_refill = datetime.now(timezone.utc)
-        db.commit()
-        db.refresh(user)
+    db.commit()
+    db.refresh(user)
     return user.hearts
 
-def update_streak_and_xp(db: Session, user: User, xp_awarded: int) -> int:
+def update_streak_and_xp(db: Session, user: User, xp_awarded: int, is_activity: bool = True) -> int:
     """
     Deterministic streak & daily XP updates:
-    - If user already practiced today: streak remains same.
+    - If user practiced today: streak remains same.
     - If user practiced yesterday: streak increases by 1.
     - If user was inactive > 1 day: streak resets to 1.
     - Tracks XP into DailyActivity for today's date (YYYY-MM-DD).
+    - Preserves streak even if practicing an already completed lesson (xp_awarded == 0).
     """
     now = datetime.now(timezone.utc)
     today_str = now.strftime("%Y-%m-%d")
@@ -75,7 +76,7 @@ def update_streak_and_xp(db: Session, user: User, xp_awarded: int) -> int:
     
     last_active_str = user.last_active_date.strftime("%Y-%m-%d") if user.last_active_date else None
 
-    if xp_awarded > 0:
+    if is_activity:
         if last_active_str == today_str:
             # Already active today, streak doesn't change
             pass
@@ -83,10 +84,12 @@ def update_streak_and_xp(db: Session, user: User, xp_awarded: int) -> int:
             # Active yesterday, increment streak
             user.streak = (user.streak or 0) + 1
         else:
-            # Gap in activity, reset streak
+            # First activity or gap in activity, set streak to 1
             user.streak = 1
 
-        user.xp = (user.xp or 0) + xp_awarded
+        if xp_awarded > 0:
+            user.xp = (user.xp or 0) + xp_awarded
+
         user.last_active_date = now
 
         # Update DailyActivity
@@ -96,7 +99,8 @@ def update_streak_and_xp(db: Session, user: User, xp_awarded: int) -> int:
         ).first()
 
         if activity:
-            activity.xp_earned += xp_awarded
+            if xp_awarded > 0:
+                activity.xp_earned += xp_awarded
         else:
             activity = DailyActivity(user_id=user.id, date=today_str, xp_earned=xp_awarded)
             db.add(activity)

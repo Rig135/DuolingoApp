@@ -122,7 +122,7 @@ def complete_lesson(db: Session, lesson_id: int, user: User) -> CompleteLessonRe
         db.add(prog)
         db.flush()
 
-    # Rule 7: Prevent duplicate XP reward
+    # Rule 7: Prevent duplicate XP reward (Authoritative check + race condition safety)
     existing_completion = db.query(LessonCompletion).filter(
         LessonCompletion.user_id == user.id,
         LessonCompletion.lesson_id == lesson.id
@@ -132,13 +132,19 @@ def complete_lesson(db: Session, lesson_id: int, user: User) -> CompleteLessonRe
     xp_awarded = 15 if first_time else 0
 
     if first_time:
-        completion = LessonCompletion(user_id=user.id, lesson_id=lesson.id)
-        db.add(completion)
-        prog.completed_lessons = (prog.completed_lessons or 0) + 1
+        try:
+            completion = LessonCompletion(user_id=user.id, lesson_id=lesson.id)
+            db.add(completion)
+            db.flush()
+            prog.completed_lessons = (prog.completed_lessons or 0) + 1
+        except Exception:
+            db.rollback()
+            first_time = False
+            xp_awarded = 0
 
     # Check if skill completed
     total_skill_lessons = len(skill.lessons)
-    skill_completed = (prog.completed_lessons >= total_skill_lessons)
+    skill_completed = ((prog.completed_lessons or 0) >= total_skill_lessons)
     next_skill_unlocked = False
 
     # Unlock next skill if this skill has been completed

@@ -90,6 +90,7 @@ class LessonCompletion(Base):
 
     user = relationship("User", back_populates="completions")
     lesson = relationship("Lesson")
+    __table_args__ = (UniqueConstraint('user_id', 'lesson_id', name='uix_user_lesson'),)
 
 class DailyActivity(Base):
     __tablename__ = "daily_activities"

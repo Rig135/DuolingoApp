@@ -111,11 +111,34 @@ export function useLesson(lessonId: string) {
 
   const completeLesson = useCallback(
     async (): Promise<CompleteLessonResponse> => {
-      const res = await fetch(`http://localhost:8000/api/lessons/${lessonId}/complete`, {
-        method: "POST",
-      })
-      if (!res.ok) throw new Error("Failed to complete lesson")
-      return res.json()
+      try {
+        const res = await fetch(`http://localhost:8000/api/lessons/${lessonId}/complete`, {
+          method: "POST",
+        })
+        if (!res.ok) {
+          const errData = await res.json().catch(() => ({}))
+          return {
+            success: false,
+            xp_awarded: 0,
+            total_xp: 0,
+            streak: 0,
+            skill_completed: false,
+            next_skill_unlocked: false,
+            message: errData.detail || "Failed to complete lesson",
+          }
+        }
+        return await res.json()
+      } catch {
+        return {
+          success: false,
+          xp_awarded: 0,
+          total_xp: 0,
+          streak: 0,
+          skill_completed: false,
+          next_skill_unlocked: false,
+          message: "Network error completing lesson",
+        }
+      }
     },
     [lessonId]
   )
