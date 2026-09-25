@@ -1,26 +1,57 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  --color-primary: #58cc02;
+  --color-primary-hover: #46a302;
+  --color-primary-border: #58a700;
+  
+  --color-secondary: #1cb0f6;
+  --color-secondary-hover: #1899d6;
+  --color-secondary-border: #1899d6;
+  
+  --color-danger: #ff4b4b;
+  --color-danger-hover: #ea2b2b;
+  --color-danger-border: #ea2b2b;
+
+  --color-locked: #e5e5e5;
+  --color-locked-border: #cecece;
+  --color-locked-text: #afafaf;
+  
+  --color-text-main: #4b4b4b;
+  --color-text-muted: #777777;
+  
+  --color-bg-main: #ffffff;
+  --color-bg-muted: #f7f7f7;
+
+  --color-heart: #ff4b4b;
+  --color-xp: #ffc800;
+  --color-streak: #ff9600;
+  --color-gem: #1cb0f6;
+
+  --font-sans: var(--font-nunito), ui-sans-serif, system-ui, sans-serif;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  body {
+    background-color: var(--color-bg-main);
+    color: var(--color-text-main);
+    font-family: var(--font-sans);
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* Custom 3D button press animation utility */
+.active-press {
+  transform: translateY(4px) !important;
+  border-bottom-width: 0px !important;
+  margin-top: 4px !important;
+}
+
+.button-base {
+  transition: transform 0.1s, border-bottom-width 0.1s;
+}
+
+.button-base:active {
+  transform: translateY(4px);
+  border-bottom-width: 0px;
+  margin-bottom: -4px;
 }

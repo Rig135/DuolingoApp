@@ -8,7 +8,7 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 from app.core.database import SessionLocal, engine, Base
 from app.models import User, Course, Unit, Skill, Lesson, Exercise, UserProgress, DailyActivity
 
-def seed_db():
+def seed_db(force: bool = False):
     print("Creating tables...")
     Base.metadata.create_all(bind=engine)
     
@@ -16,9 +16,10 @@ def seed_db():
     
     try:
         # Check if already seeded
-        if db.query(Course).first():
+        if not force and db.query(Course).first():
             print("Database already seeded. Run with a clean DB to re-seed.")
             return
+
 
         print("Seeding Users...")
         default_user = User(username="default_learner", xp=120, streak=3, hearts=5)
