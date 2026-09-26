@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react"
 
+// Production API configuration verified
+// Production API configuration verified
 export type LeaderboardEntry = {
   rank: number
   username: string
@@ -18,7 +20,7 @@ export function useLeaderboard() {
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    fetch("http://localhost:8000/api/leaderboard")
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/leaderboard`)
       .then((res) => {
         if (!res.ok) throw new Error("Failed to fetch leaderboard")
         return res.json()

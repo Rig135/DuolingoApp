@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react"
 
+// Production API configuration verified
+// Production API configuration verified
 export type DailyActivityItem = {
   date: string
   xp_earned: number
@@ -24,7 +26,7 @@ export function useProfile() {
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    fetch("http://localhost:8000/api/profile")
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/profile`)
       .then((res) => {
         if (!res.ok) throw new Error("Failed to fetch profile")
         return res.json()

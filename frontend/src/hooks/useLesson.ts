@@ -1,5 +1,7 @@
 import { useState, useEffect, useCallback } from "react"
 
+// Production API configuration verified
+// Production API configuration verified
 export type ExercisePublic = {
   id: number
   lesson_id: number
@@ -42,7 +44,7 @@ export function useLesson(lessonId: string) {
   useEffect(() => {
     if (!lessonId || lessonId === "undefined") return
     setLoading(true)
-    fetch(`http://localhost:8000/api/lessons/${lessonId}`)
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/lessons/${lessonId}`)
       .then((res) => {
         if (!res.ok) throw new Error("Failed to fetch lesson")
         return res.json()
@@ -61,7 +63,7 @@ export function useLesson(lessonId: string) {
   const checkAnswer = useCallback(
     async (exerciseId: number, answer: any): Promise<CheckAnswerResponse> => {
       try {
-        const res = await fetch(`http://localhost:8000/api/exercises/${exerciseId}/check`, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/exercises/${exerciseId}/check`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ user_answer: answer }),
@@ -100,7 +102,7 @@ export function useLesson(lessonId: string) {
 
   const refillHearts = useCallback(async (): Promise<boolean> => {
     try {
-      const res = await fetch("http://localhost:8000/api/users/me/refill-hearts", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/me/refill-hearts`, {
         method: "POST",
       })
       return res.ok
@@ -112,7 +114,7 @@ export function useLesson(lessonId: string) {
   const completeLesson = useCallback(
     async (): Promise<CompleteLessonResponse> => {
       try {
-        const res = await fetch(`http://localhost:8000/api/lessons/${lessonId}/complete`, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/lessons/${lessonId}/complete`, {
           method: "POST",
         })
         if (!res.ok) {

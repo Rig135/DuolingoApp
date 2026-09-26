@@ -33,7 +33,8 @@ export function LessonPlayer({ lessonId }: { lessonId: string }) {
   const [feedback, setFeedback] = useState<{ is_correct?: boolean; correct_answer?: any; message?: string } | null>(null)
   
   useEffect(() => {
-    fetch("http://localhost:8000/api/dashboard")
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/dashboard`)
+
       .then((res) => (res.ok ? res.json() : null))
       .then((data) => {
         if (data?.user?.hearts !== undefined) {
