@@ -13,4 +13,4 @@ services:
       - key: SQLITE_URL
         value: sqlite:///./duolingo.db
       - key: FRONTEND_URL
-        value: https://duolingo-mqq64wd7m-rig135s-projects.vercel.app
+        value: https://duolingo-app-jet.vercel.app
