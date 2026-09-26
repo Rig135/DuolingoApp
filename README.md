@@ -1,4 +1,6 @@
-# Duolingo Web App Clone
+# Duolingo Clone
+
+🚀 **Live Demo:** https://duolingo-app-jet.vercel.app/
 
 ## 1. Project Overview
 This project is a full-stack web application inspired by Duolingo. It allows users to progress through a series of language-learning lessons organized in a learning tree (units and sections). It features a gamified learning experience with hearts, XP, and a daily streak system.

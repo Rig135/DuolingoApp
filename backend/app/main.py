@@ -3,9 +3,25 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings
 from app.api.endpoints import health, dashboard, lessons, exercises, users, dev
 
+from contextlib import asynccontextmanager
+from app.core.database import engine, Base
+import app.models  # Ensure models are loaded before create_all
+
+# Optional automatic seed logic
+import seed
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Create tables safely
+    Base.metadata.create_all(bind=engine)
+    # Seed safely (seed.py checks if Course already exists)
+    seed.seed_db(force=False)
+    yield
+
 app = FastAPI(
     title=settings.PROJECT_NAME,
-    openapi_url=f"{settings.API_V1_STR}/openapi.json"
+    openapi_url=f"{settings.API_V1_STR}/openapi.json",
+    lifespan=lifespan
 )
 
 # Set all CORS enabled origins
