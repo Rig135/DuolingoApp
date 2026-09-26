@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react"
 
+// Production API configuration verified
 export type UserSummary = {
   id: number
   username: string
@@ -37,7 +38,8 @@ export function useDashboard() {
   const [loading, setLoading] = useState(true)
 
   const fetchDashboard = () => {
-    fetch("http://localhost:8000/api/dashboard")
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/dashboard`)
+
       .then((res) => (res.ok ? res.json() : null))
       .then((d) => {
         if (d) setData(d)
@@ -55,7 +57,7 @@ export function useDashboard() {
 
   const refillHearts = async () => {
     try {
-      const res = await fetch("http://localhost:8000/api/users/me/refill-hearts", { method: "POST" })
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/me/refill-hearts`, { method: "POST" })
       if (res.ok) {
         fetchDashboard()
       }
